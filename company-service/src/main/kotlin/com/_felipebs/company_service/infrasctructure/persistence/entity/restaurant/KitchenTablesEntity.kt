@@ -15,7 +15,7 @@ class KitchenTablesEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "kitchen_tables_id")
-    private var kitchenTablesId : UUID,
+    private var id : UUID,
 
     @Column(name = "kitchen_id")
     private var kitchenId : Long,

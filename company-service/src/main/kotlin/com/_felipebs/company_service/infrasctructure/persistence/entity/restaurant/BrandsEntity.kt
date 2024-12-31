@@ -1,5 +1,6 @@
 package com._felipebs.company_service.infrasctructure.persistence.entity.restaurant
 
+import com._felipebs.company_service.application.restaurant.kitchens.domain.Kitchens
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -9,20 +10,22 @@ class BrandsEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
-    private var id : Long,
+    var id : Long,
 
     @Column(name = "brand_name")
-    private var name : String,
+    var name : String,
 
     @Column(name = "type_of_cuisine")
-    private var typeOfCuisine : String,
+    var typeOfCuisine : String,
 
     @Column(name = "status")
-    private var status : String,
+    var status : String,
 
     @Column(name = "created_at")
-    private var createdAt : LocalDateTime,
+    var createdAt : LocalDateTime,
 
     @Column(name = "updated_at")
-    private var updatedAt : LocalDateTime
-)
+    var updatedAt : LocalDateTime
+) {
+
+}
