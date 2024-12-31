@@ -1,4 +1,4 @@
-package com._felipebs.company_service.application.restaurant.establishments.infrastructure.entity
+package com._felipebs.company_service.infrasctructure.persistence.entity.restaurant
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
