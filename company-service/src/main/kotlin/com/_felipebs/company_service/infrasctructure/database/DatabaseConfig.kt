@@ -1,4 +1,4 @@
-package com._felipebs.company_service.infrasctructure.database.config
+package com._felipebs.company_service.infrasctructure.database
 
 import io.github.cdimascio.dotenv.dotenv
 import org.springframework.boot.context.properties.EnableConfigurationProperties

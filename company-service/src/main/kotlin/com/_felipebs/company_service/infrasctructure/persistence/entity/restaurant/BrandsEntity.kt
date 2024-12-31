@@ -1,12 +1,11 @@
-package com._felipebs.company_service.application.restaurant.brands.infrastructure.entity
+package com._felipebs.company_service.infrasctructure.persistence.entity.restaurant
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Entity
 @Table(name = "brands", schema = "restaurant")
-class BrandEntity(
+class BrandsEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
