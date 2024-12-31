@@ -17,8 +17,8 @@ class KitchenTablesEntity (
     @Column(name = "kitchen_tables_id")
     private var kitchenTablesId : UUID,
 
-    @Column(name = "establishment_id")
-    private var establishmentId : Long,
+    @Column(name = "kitchen_id")
+    private var kitchenId : Long,
 
     @Column(name = "availability")
     private var avaliability : String,

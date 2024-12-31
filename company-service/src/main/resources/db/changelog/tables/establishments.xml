@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="felipebs" id="1220242347">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="establishments" schemaName="restaurant"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="establishments" schemaName="restaurant">
+            <column name="establishment_id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="brand_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="establishment_name" type="VARCHAR(100)"/>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(20)"/>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+
+        <addForeignKeyConstraint  baseColumnNames="brand_id"
+                                  baseTableName="establishments"
+                                  baseTableSchemaName="restaurant"
+                                  constraintName="fk_brands_establishments"
+                                  referencedColumnNames="brand_id"
+                                  referencedTableName="brands"
+                                  referencedTableSchemaName="restaurant"
+                                  validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>
