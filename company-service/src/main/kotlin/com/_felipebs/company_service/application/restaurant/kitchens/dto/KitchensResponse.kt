@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class KitchensResponse(
     val id : Long,
     val establishmentId : Long,
-    val kitchenName : String,
+    val name : String,
     val createdAt : LocalDateTime,
     val updatedAt : LocalDateTime?
 ) {
@@ -14,7 +14,7 @@ data class KitchensResponse(
         fun fromDomain(domain: Kitchens) = KitchensResponse(
             id = domain.id!!,
             establishmentId = domain.establishmentId,
-            kitchenName = domain.kitchenName,
+            name = domain.name,
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt
         )

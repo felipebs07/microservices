@@ -16,7 +16,7 @@ class KitchensEntity (
     private var establishmentId : Long,
 
     @Column(name = "kitchen_name")
-    private var kitchenName : String,
+    private var name : String,
 
     @Column(name = "created_at")
     private var createdAt : LocalDateTime,
@@ -27,7 +27,7 @@ class KitchensEntity (
     fun toDomain () = Kitchens (
         id = id,
         establishmentId =  establishmentId,
-        kitchenName = kitchenName,
+        name = name,
         createdAt = createdAt,
         updatedAt = updatedAt
     )
@@ -36,7 +36,7 @@ class KitchensEntity (
         fun fromDomain(domain: Kitchens) = KitchensEntity(
             id = domain.id,
             establishmentId = domain.establishmentId,
-            kitchenName = domain.kitchenName,
+            name = domain.name,
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt
         )

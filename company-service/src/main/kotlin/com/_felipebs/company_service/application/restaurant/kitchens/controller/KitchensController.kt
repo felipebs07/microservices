@@ -17,44 +17,41 @@ import java.net.URI
 @RestController
 @RequestMapping("/api/restaurants/kitchens")
 class KitchensController(
-    val kitchensService: KitchensService
+    val service: KitchensService
 ) {
 
     @GetMapping
     fun findAll() : ResponseEntity<List<KitchensResponse>> {
-        val kitchensList = kitchensService.findAll().map { KitchensResponse.fromDomain(it) }
-        return if (kitchensList.isEmpty()) {
+        val registryList = service.findAll().map { KitchensResponse.fromDomain(it) }
+        return if (registryList.isEmpty()) {
             ResponseEntity.noContent().build()
         } else {
-            ResponseEntity.ok(kitchensList)
+            ResponseEntity.ok(registryList)
         }
     }
 
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Long) : ResponseEntity<KitchensResponse> {
-        return kitchensService.findById(id)?.let {
+        return service.findById(id)?.let {
             ResponseEntity.ok(KitchensResponse.fromDomain(it))
         } ?: ResponseEntity.notFound().build()
     }
 
     @PostMapping
     fun create(@RequestBody request: KitchensRequest) : ResponseEntity<KitchensResponse> {
-        val kitchens = kitchensService.create(request)
-        val response = KitchensResponse.fromDomain(kitchens)
-        return ResponseEntity.created(URI("/api/kitchens/${response.id}")).body(response)
+        val registry = KitchensResponse.fromDomain(service.create(request))
+        return ResponseEntity.created(URI("/api/restaurants/kitchens/${registry.id}")).body(registry)
     }
 
     @PutMapping("/{id}")
     fun update(@RequestBody request: KitchensRequest, @PathVariable id: Long) : ResponseEntity<KitchensResponse> {
-        val kitchens = kitchensService.update(request, id)
-        val response = KitchensResponse.fromDomain(kitchens)
-        return ResponseEntity.ok().body(response)
+        val registry = KitchensResponse.fromDomain(service.update(request, id))
+        return ResponseEntity.ok().body(registry)
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) : ResponseEntity<Unit> {
-        kitchensService.delete(id)
-        return ResponseEntity.noContent().build()
+    fun delete(@PathVariable id: Long) : ResponseEntity<String> {
+        return if (service.delete(id)) ResponseEntity.noContent().build() else ResponseEntity.badRequest().body("Error while trying to delete: $id")
     }
 
 }

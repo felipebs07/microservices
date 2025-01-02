@@ -4,6 +4,7 @@ import com._felipebs.company_service.application.restaurant.kitchens.domain.Kitc
 import com._felipebs.company_service.application.restaurant.kitchens.dto.KitchensRequest
 import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.KitchensEntity
 import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchensRepository
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -11,7 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class KitchensService(val repository: IKitchensRepository) {
-    val log = LoggerFactory.getLogger(KitchensEntity::class.java)
+    val log: Logger = LoggerFactory.getLogger(KitchensEntity::class.java)
 
     fun findAll(): List<Kitchens> {
         return repository.findAll().map { it.toDomain() }
@@ -25,7 +26,7 @@ class KitchensService(val repository: IKitchensRepository) {
         val kitchens = Kitchens(
             id = null,
             establishmentId =  request.establishmentId,
-            kitchenName = request.kitchenName,
+            name = request.name,
             createdAt = LocalDateTime.now(),
             updatedAt = null
         )
@@ -44,7 +45,7 @@ class KitchensService(val repository: IKitchensRepository) {
         val kitchens = Kitchens(
             id = entitySaved.id,
             establishmentId =  request.establishmentId,
-            kitchenName = request.kitchenName,
+            name = request.name,
             createdAt = entitySaved.createdAt,
             updatedAt = LocalDateTime.now()
         )
@@ -57,11 +58,13 @@ class KitchensService(val repository: IKitchensRepository) {
         return entity.toDomain();
     }
 
-    fun delete(id: Long) {
-        try {
+    fun delete(id: Long) : Boolean {
+        return try {
             repository.deleteById(id)
+            true
         } catch(e: Exception) {
             log.error("Error while trying to delete: ${e.message}")
+            false
         }
     }
 }

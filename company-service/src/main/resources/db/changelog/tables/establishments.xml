@@ -12,7 +12,7 @@
         </preConditions>
 
         <createTable tableName="establishments" schemaName="restaurant">
-            <column name="establishment_id" type="BIGINT">
+            <column name="establishment_id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="brand_id" type="BIGINT">
