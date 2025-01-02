@@ -1,5 +1,6 @@
 package com._felipebs.company_service.infrasctructure.database
 
+import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
 import liquibase.integration.spring.SpringLiquibase
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -12,15 +13,15 @@ import javax.sql.DataSource
 @Configuration
 @EnableConfigurationProperties
 class DatabaseConfig {
+    private val dotenv = dotenv()
 
     @Bean
     fun dataSource(): DataSource {
-        val dotenv = dotenv()
         val dataSourceBuilder = DataSourceBuilder.create()
         dataSourceBuilder.driverClassName("org.postgresql.Driver")
-        dataSourceBuilder.url(dotenv["DB_POSTGRES_URL"])
-        dataSourceBuilder.username(dotenv["DB_POSTGRES_USERNAME"])
-        dataSourceBuilder.password(dotenv["DB_POSTGRES_PASSWORD"])
+        dataSourceBuilder.url(dotenv["SPRING_DATASOURCE_URL"])
+        dataSourceBuilder.username(dotenv["POSTGRES_USER"])
+        dataSourceBuilder.password(dotenv["POSTGRES_PASSWORD"])
 
         return dataSourceBuilder.build()
     }
@@ -32,5 +33,12 @@ class DatabaseConfig {
         liquibase.defaultSchema = "public"
         liquibase.changeLog =  "classpath:db/changelog/master.xml"
         return liquibase
+    }
+
+
+    private fun dotenv(): Dotenv {
+        return Dotenv.configure()
+            .filename(".env")
+            .load()
     }
 }
