@@ -19,9 +19,9 @@ class DatabaseConfig {
     fun dataSource(): DataSource {
         val dataSourceBuilder = DataSourceBuilder.create()
         dataSourceBuilder.driverClassName("org.postgresql.Driver")
-        dataSourceBuilder.url(dotenv["SPRING_DATASOURCE_URL"])
-        dataSourceBuilder.username(dotenv["POSTGRES_USER"])
-        dataSourceBuilder.password(dotenv["POSTGRES_PASSWORD"])
+        dataSourceBuilder.url(dotenv["COMPANY_SPRING_DATASOURCE_URL"])
+        dataSourceBuilder.username(dotenv["COMPANY_POSTGRES_USER"])
+        dataSourceBuilder.password(dotenv["COMPANY_POSTGRES_PASSWORD"])
 
         return dataSourceBuilder.build()
     }
