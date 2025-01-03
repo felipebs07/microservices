@@ -1,0 +1,61 @@
+services:
+  company-service:
+    container_name: "company-api-dev"
+    build:
+      context: ./company-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=${COMPANY_SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${COMPANY_POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_LIQUIBASE_ENABLED=true
+    depends_on:
+      - postgres_db
+    networks:
+      - app-network
+    volumes:
+      - .env:/app/.env
+
+  postgres_db:
+    container_name: "company-postgres-dev"
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    environment:
+      - POSTGRES_DB=${COMPANY_POSTGRES_DB}
+      - POSTGRES_USER=${COMPANY_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+  grafana:
+    image: grafana/grafana:9.5.2
+    
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/grafana.yml:/etc/grafana/grafana.yml
+
+networks:
+  app-network:
+
+volumes:
+  postgres_data:
