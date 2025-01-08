@@ -9,11 +9,9 @@ import com._felipebs.company_service.infrasctructure.persistence.repository.rest
 import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchenTablesRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.UUID
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheRepository: IKitchenTablesCacheRepository) {
@@ -44,7 +42,6 @@ class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheR
             updatedAt = null
         )
 
-
         if(registry.isValid().not()) {
             throw IllegalArgumentException("Kitchen Table is invalid registry!")
         }
@@ -70,11 +67,13 @@ class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheR
         }
 
         val entity = repository.save(KitchenTablesEntity.fromDomain(registry))
-        return entity.toDomain()
+        val cache = cacheRepository.save(KitchenTablesCacheEntity.fromDomain(entity))
+        return cache.toDomain()
     }
 
     fun delete(id: UUID) : Boolean {
         return try {
+            cacheRepository.deleteById(id)
             repository.deleteById(id)
             true
         } catch(e: Exception) {
