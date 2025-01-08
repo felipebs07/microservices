@@ -10,6 +10,7 @@ import com._felipebs.company_service.infrasctructure.persistence.repository.rest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -33,6 +34,7 @@ class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheR
         return cacheRepository.save(cacheEntity).toDomain()
     }
 
+    @Transactional
     fun create(request: KitchenTablesRequest) : KitchenTables {
         val registry = KitchenTables(
             id = null,
@@ -51,6 +53,7 @@ class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheR
         return cache.toDomain()
     }
 
+    @Transactional
     fun update(request: KitchenTablesRequest, id: UUID) : KitchenTables {
         val entitySaved = findById(id) ?: throw RuntimeException("No record found with that ID!")
 
@@ -71,6 +74,7 @@ class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheR
         return cache.toDomain()
     }
 
+    @Transactional
     fun delete(id: UUID) : Boolean {
         return try {
             cacheRepository.deleteById(id)
