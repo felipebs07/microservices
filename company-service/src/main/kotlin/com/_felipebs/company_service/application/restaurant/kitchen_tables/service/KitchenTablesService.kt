@@ -3,25 +3,36 @@ package com._felipebs.company_service.application.restaurant.kitchen_tables.serv
 
 import com._felipebs.company_service.application.restaurant.kitchen_tables.domain.KitchenTables
 import com._felipebs.company_service.application.restaurant.kitchen_tables.dto.KitchenTablesRequest
-import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.KitchenTablesEntity
+import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.kitchenTables.KitchenTablesCacheEntity
+import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.kitchenTables.KitchenTablesEntity
+import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchenTablesCacheRepository
 import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchenTablesRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-class KitchenTablesService (val repository: IKitchenTablesRepository) {
+class KitchenTablesService (val repository: IKitchenTablesRepository, val cacheRepository: IKitchenTablesCacheRepository) {
     val log: Logger = LoggerFactory.getLogger(KitchenTablesEntity::class.java)
 
     fun findAll(): List<KitchenTables> {
-        return repository.findAll().map { it.toDomain() }
+       return  repository.findAll().map { it.toDomain() }
     }
 
+
     fun findById(id : UUID): KitchenTables? {
-        return repository.findById(id).getOrNull()?.toDomain()
+        val cachedEntity = cacheRepository.findById(id).orElse(null)
+        if(cachedEntity != null) return cachedEntity.toDomain();
+
+        val dbEntity = repository.findById(id).orElse(null) ?: return null
+
+        val cacheEntity = KitchenTablesCacheEntity.fromDomain(dbEntity)
+
+        return cacheRepository.save(cacheEntity).toDomain()
     }
 
     fun create(request: KitchenTablesRequest) : KitchenTables {
@@ -39,7 +50,8 @@ class KitchenTablesService (val repository: IKitchenTablesRepository) {
         }
 
         val entity = repository.save(KitchenTablesEntity.fromDomain(registry))
-        return entity.toDomain()
+        val cache = cacheRepository.save(KitchenTablesCacheEntity.fromDomain(entity))
+        return cache.toDomain()
     }
 
     fun update(request: KitchenTablesRequest, id: UUID) : KitchenTables {

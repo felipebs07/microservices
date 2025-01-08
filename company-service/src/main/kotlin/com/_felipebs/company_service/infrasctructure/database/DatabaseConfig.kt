@@ -1,13 +1,13 @@
 package com._felipebs.company_service.infrasctructure.database
 
 import io.github.cdimascio.dotenv.Dotenv
-import io.github.cdimascio.dotenv.dotenv
 import liquibase.integration.spring.SpringLiquibase
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+
 import javax.sql.DataSource
 
 @Configuration
@@ -34,7 +34,6 @@ class DatabaseConfig {
         liquibase.changeLog =  "classpath:db/changelog/master.xml"
         return liquibase
     }
-
 
     private fun dotenv(): Dotenv {
         return Dotenv.configure()

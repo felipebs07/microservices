@@ -1,4 +1,4 @@
-package com._felipebs.company_service.infrasctructure.persistence.entity.restaurant
+package com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.kitchenTables
 
 import com._felipebs.company_service.application.restaurant.kitchen_tables.domain.KitchenTables
 import jakarta.persistence.Column
@@ -16,20 +16,23 @@ class KitchenTablesEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "kitchen_tables_id")
-    private var id : UUID?,
+    var id : UUID?,
 
     @Column(name = "kitchen_id")
-    private var kitchenId : Long,
+    var kitchenId : Long,
 
     @Column(name = "availability")
-    private var avaliability : String,
+    var avaliability : String,
 
     @Column(name = "created_at")
-    private var createdAt : LocalDateTime,
+    var createdAt : LocalDateTime,
 
     @Column(name = "updated_at")
-    private var updatedAt : LocalDateTime?
+    var updatedAt : LocalDateTime?
 ) {
+
+
+
     fun toDomain () =  KitchenTables (
         id = id,
         kitchenId =  kitchenId,

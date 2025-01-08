@@ -3,6 +3,8 @@ package com._felipebs.company_service.application.restaurant.kitchen_tables.cont
 import com._felipebs.company_service.application.restaurant.kitchen_tables.dto.KitchenTablesRequest
 import com._felipebs.company_service.application.restaurant.kitchen_tables.dto.KitchenTablesResponse
 import com._felipebs.company_service.application.restaurant.kitchen_tables.service.KitchenTablesService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI
