@@ -1,6 +1,55 @@
 services:
+  # INFRASCTRUCTURE - MONITORING
+  discovery-service:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - company-network
+      - monitoring-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring-network
+  grafana:
+    image: grafana/grafana:9.5.2
+    
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./grafana.yml:/etc/grafana/grafana.yml
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring-network  
+
+  # INFRASCTRUCTURE - DATABASE
+  company-postgres:
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - company-network
+    environment:
+      - POSTGRES_DB=${COMPANY_POSTGRES_DB}
+      - POSTGRES_USER=${COMPANY_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+
+
+  # INFRASCTRUCTURE - MICROSERVICES
   company-service:
-    container_name: "company-api-dev"
     build:
       context: ./company-service
       dockerfile: Dockerfile
@@ -15,47 +64,17 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
       - SPRING_LIQUIBASE_ENABLED=true
     depends_on:
-      - postgres_db
+      - company-postgres
+      - discovery-service
     networks:
-      - app-network
+      - company-network
     volumes:
       - .env:/app/.env
 
-  postgres_db:
-    container_name: "company-postgres-dev"
-    image: postgres:latest
-    ports:
-      - "5434:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    environment:
-      - POSTGRES_DB=${COMPANY_POSTGRES_DB}
-      - POSTGRES_USER=${COMPANY_POSTGRES_USER}
-      - POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
-
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - app-network
-  grafana:
-    image: grafana/grafana:9.5.2
-    
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    volumes:
-      - ./monitoring/grafana.yml:/etc/grafana/grafana.yml
 
 networks:
-  app-network:
+  company-network:
+  monitoring-network:
 
 volumes:
   postgres_data:
