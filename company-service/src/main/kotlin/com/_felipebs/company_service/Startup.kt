@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.EnableCaching
 
 @SpringBootApplication
 @EnableCaching
+
 class CompanyServiceApplication
 
 fun main(args: Array<String>) {
