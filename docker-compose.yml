@@ -1,49 +1,41 @@
 services:
-  company-service:
-    container_name: "company-api-dev"
+  # LOADBALANCER - NGINX
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    networks:
+      - company-network  # Adicionar as networks
+      - monitoring-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # INFRASCTRUCTURE - MONITORING
+  discovery-service:
     build:
-      context: ./company-service
+      context: ./discovery-service
       dockerfile: Dockerfile
     env_file:
       - .env
     ports:
-      - "8080:8080"
+      - "8761:8761"
     environment:
-      - SPRING_DATASOURCE_URL=${COMPANY_SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${COMPANY_POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
-      - SPRING_LIQUIBASE_ENABLED=true
-    depends_on:
-      - postgres_db
+      - EUREKA_HOSTNAME=${EUREKA_HOSTNAME}
     networks:
-      - app-network
-    volumes:
-      - .env:/app/.env
-
-  postgres_db:
-    container_name: "company-postgres-dev"
-    image: postgres:latest
-    ports:
-      - "5434:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    environment:
-      - POSTGRES_DB=${COMPANY_POSTGRES_DB}
-      - POSTGRES_USER=${COMPANY_POSTGRES_USER}
-      - POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+      - company-network
+      - monitoring-network
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
-      - app-network
+      - monitoring-network
   grafana:
     image: grafana/grafana:9.5.2
     
@@ -52,10 +44,62 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./monitoring/grafana.yml:/etc/grafana/grafana.yml
+      - ./grafana.yml:/etc/grafana/grafana.yml
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring-network  
+
+  # INFRASCTRUCTURE - DATABASE
+  company-postgres:
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - company-network
+    environment:
+      - POSTGRES_DB=${COMPANY_POSTGRES_DB}
+      - POSTGRES_USER=${COMPANY_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+
+
+  # INFRASCTRUCTURE - MICROSERVICES
+  company-service:
+    container_name: company-service-1
+    build:
+      context: ./company-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    environment:
+      - COMPANY_SPRING_DATASOURCE_URL=${COMPANY_SPRING_DATASOURCE_URL}
+      - COMPANY_POSTGRES_USER=${COMPANY_POSTGRES_USER}
+      - COMPANY_POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+
+      - COMPANY_REDIS_CACHE_PASSWORD=${COMPANY_REDIS_CACHE_PASSWORD}
+      - COMPANY_REDIS_CACHE_PORT=${COMPANY_REDIS_CACHE_PORT}
+      - COMPANY_REDIS_CACHE_URL=${COMPANY_REDIS_CACHE_URL}
+
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_LIQUIBASE_ENABLED=true
+
+      - EUREKA_URL_DEFAULT=${EUREKA_URL_DEFAULT}
+    depends_on:
+      - company-postgres
+      - discovery-service
+    networks:
+      - company-network
+    volumes:
+      - .env:/app/.env
+
 
 networks:
-  app-network:
+  company-network:
+  monitoring-network:
 
 volumes:
   postgres_data:

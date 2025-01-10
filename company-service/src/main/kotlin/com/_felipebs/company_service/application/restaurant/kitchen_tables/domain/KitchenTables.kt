@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class KitchenTables (
+
     val id : UUID?,
     val kitchenId : Long,
     val avaliability : String,
