@@ -1,4 +1,17 @@
 services:
+  # LOADBALANCER - NGINX
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    networks:
+      - company-network  # Adicionar as networks
+      - monitoring-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   # INFRASCTRUCTURE - MONITORING
   discovery-service:
     build:
@@ -54,6 +67,7 @@ services:
 
   # INFRASCTRUCTURE - MICROSERVICES
   company-service:
+    container_name: company-service-1
     build:
       context: ./company-service
       dockerfile: Dockerfile
