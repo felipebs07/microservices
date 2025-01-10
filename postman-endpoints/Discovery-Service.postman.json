@@ -1,0 +1,19 @@
+{
+	"info": {
+		"_postman_id": "695a0a40-9087-47e5-9caf-cd07362c500f",
+		"name": "Discovery",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "13182930"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{localhost-eureka}}/actuator/health"
+			},
+			"response": []
+		}
+	]
+}
