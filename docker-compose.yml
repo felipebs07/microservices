@@ -4,8 +4,12 @@ services:
     build:
       context: ./discovery-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
       - "8761:8761"
+    environment:
+      - EUREKA_HOSTNAME=${EUREKA_HOSTNAME}
     networks:
       - company-network
       - monitoring-network
@@ -58,11 +62,18 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=${COMPANY_SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${COMPANY_POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+      - COMPANY_SPRING_DATASOURCE_URL=${COMPANY_SPRING_DATASOURCE_URL}
+      - COMPANY_POSTGRES_USER=${COMPANY_POSTGRES_USER}
+      - COMPANY_POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
+
+      - COMPANY_REDIS_CACHE_PASSWORD=${COMPANY_REDIS_CACHE_PASSWORD}
+      - COMPANY_REDIS_CACHE_PORT=${COMPANY_REDIS_CACHE_PORT}
+      - COMPANY_REDIS_CACHE_URL=${COMPANY_REDIS_CACHE_URL}
+
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
       - SPRING_LIQUIBASE_ENABLED=true
+
+      - EUREKA_URL_DEFAULT=${EUREKA_URL_DEFAULT}
     depends_on:
       - company-postgres
       - discovery-service
