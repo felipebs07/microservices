@@ -3,8 +3,8 @@ package com._felipebs.company_service.application.restaurant.brands.service
 
 import com._felipebs.company_service.application.restaurant.brands.domain.Brands
 import com._felipebs.company_service.application.restaurant.brands.dto.BrandsRequest
-import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.BrandsEntity
-import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IBrandsRepository
+import com._felipebs.company_service.infrasctructure.persistence.restaurant.BrandsEntity
+import com._felipebs.company_service.infrasctructure.repository.restaurant.IBrandsRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

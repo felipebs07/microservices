@@ -2,8 +2,8 @@ package com._felipebs.company_service.application.restaurant.kitchens.service
 
 import com._felipebs.company_service.application.restaurant.kitchens.domain.Kitchens
 import com._felipebs.company_service.application.restaurant.kitchens.dto.KitchensRequest
-import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.KitchensEntity
-import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchensRepository
+import com._felipebs.company_service.infrasctructure.persistence.restaurant.KitchensEntity
+import com._felipebs.company_service.infrasctructure.repository.restaurant.IKitchensRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

@@ -3,10 +3,10 @@ package com._felipebs.company_service.application.restaurant.kitchen_tables.serv
 
 import com._felipebs.company_service.application.restaurant.kitchen_tables.domain.KitchenTables
 import com._felipebs.company_service.application.restaurant.kitchen_tables.dto.KitchenTablesRequest
-import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.kitchenTables.KitchenTablesCacheEntity
-import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.kitchenTables.KitchenTablesEntity
-import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchenTablesCacheRepository
-import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IKitchenTablesRepository
+import com._felipebs.company_service.infrasctructure.persistence.restaurant.kitchenTables.KitchenTablesCacheEntity
+import com._felipebs.company_service.infrasctructure.persistence.restaurant.kitchenTables.KitchenTablesEntity
+import com._felipebs.company_service.infrasctructure.repository.restaurant.IKitchenTablesCacheRepository
+import com._felipebs.company_service.infrasctructure.repository.restaurant.IKitchenTablesRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
