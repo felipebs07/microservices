@@ -1,4 +1,4 @@
-package com._felipebs.company_service.infrasctructure.monitor
+package com._felipebs.order_service.infrasctructure.monitor
 
 
 import io.micrometer.core.instrument.Counter
@@ -24,7 +24,6 @@ class MonitoringConfig {
             "@annotation(org.springframework.web.bind.annotation.DeleteMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.PostMapping)")
     fun monitorEndPoints(joinPoint: ProceedingJoinPoint) : Any {
-        val start = System.currentTimeMillis()
         val endpoint = extractEndPoint(joinPoint)
         return try {
             val result = joinPoint.proceed()

@@ -3,15 +3,18 @@ package com._felipebs.order_service.infrasctructure.persistence
 import com._felipebs.order_service.application.order_items.domain.OrderItems
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "order_items", schema = "restaurant")
 class OrderItemsEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orders_id")
+    @Column(name = "order_items_id")
     private var id : Long?,
+
+    @Column(name = "orders_id")
+    private var orderId : UUID,
 
     @Column(name = "quantity")
     private var quantity : Int,
@@ -25,9 +28,10 @@ class OrderItemsEntity(
     @Column(name = "created_at")
     private var createdAt : LocalDateTime,
 
-) {
+    ) {
     fun toDomain () = OrderItems (
         id = id,
+        orderId = orderId,
         quantity =  quantity,
         unitPrice = unitPrice,
         obsTextModification = obsTextModification,
@@ -37,6 +41,7 @@ class OrderItemsEntity(
     companion object {
         fun fromDomain(domain: OrderItems) = OrderItemsEntity(
             id = domain.id,
+            orderId = domain.orderId,
             quantity =  domain.quantity,
             unitPrice = domain.unitPrice,
             obsTextModification = domain.obsTextModification,

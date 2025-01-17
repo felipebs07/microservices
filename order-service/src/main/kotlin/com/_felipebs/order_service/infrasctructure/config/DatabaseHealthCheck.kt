@@ -1,20 +1,14 @@
-package com._felipebs.company_service.infrasctructure.database
+package com._felipebs.order_service.infrasctructure.config
 
 
 import com.zaxxer.hikari.HikariDataSource
-import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.Gauge
 import io.micrometer.core.instrument.Metrics
-import io.micrometer.core.instrument.Timer
-import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.annotation.Around
-import org.aspectj.lang.annotation.Aspect
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 
 import org.springframework.stereotype.Component
-import java.util.concurrent.TimeUnit
 import javax.sql.DataSource
 
 @Component

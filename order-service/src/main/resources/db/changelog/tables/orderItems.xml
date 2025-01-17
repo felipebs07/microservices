@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="felipebs" id="1220242347">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="order_items" schemaName="restaurant"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="order_items" schemaName="restaurant">
+            <column name="order_items_id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="orders_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="obs_text_modification" type="VARCHAR(150)"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint  baseColumnNames="orders_id"
+                                  baseTableName="order_items"
+                                  baseTableSchemaName="restaurant"
+                                  constraintName="fk_orders_order_items"
+                                  referencedColumnNames="orders_id"
+                                  referencedTableName="orders"
+                                  referencedTableSchemaName="restaurant"
+                                  validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

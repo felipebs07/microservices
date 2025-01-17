@@ -10,10 +10,13 @@ import java.util.*
 
 @RedisHash
 class OrdersCacheEntity (
+
     @Id
     private var id : UUID?,
+
     @Indexed
     private var kitchenTableId : Long,
+
     @Indexed
     private var paymentId : UUID?,
 
@@ -21,7 +24,6 @@ class OrdersCacheEntity (
     private var status : String,
     private var createdAt : LocalDateTime,
     private var updatedAt : LocalDateTime?
-
 ) {
     fun toDomain () = Orders (
         id = id,
@@ -34,7 +36,7 @@ class OrdersCacheEntity (
     )
 
     companion object {
-        fun fromDomain(domain: Orders) = OrdersEntity(
+        fun fromDomain(domain: OrdersEntity) = OrdersCacheEntity(
             id = domain.id,
             kitchenTableId =  domain.kitchenTableId,
             paymentId = domain.paymentId,

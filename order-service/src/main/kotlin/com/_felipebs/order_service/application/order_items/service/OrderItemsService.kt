@@ -20,12 +20,13 @@ class OrderItemsService(val repository: IOrderItemsRepository) {
     }
 
     fun findById(id : Long): OrderItems? {
-        return repository.findById(id).getOrNull()?.toDomain();
+        return repository.findById(id).getOrNull()?.toDomain()
     }
 
     fun create(request: OrderItemsRequest) : OrderItems {
         val orderItems = OrderItems(
             id = null,
+            orderId = request.ordersId,
             quantity =  request.quantity,
             unitPrice = request.unitPrice,
             obsTextModification = request.obsTextModification,
@@ -37,7 +38,7 @@ class OrderItemsService(val repository: IOrderItemsRepository) {
         }
 
         val entity = repository.save(OrderItemsEntity.fromDomain(orderItems))
-        return entity.toDomain();
+        return entity.toDomain()
     }
 
     fun update(request: OrderItemsRequest, id: Long) : OrderItems {
@@ -45,6 +46,7 @@ class OrderItemsService(val repository: IOrderItemsRepository) {
 
         val orderItems = OrderItems(
             id = entitySaved.id,
+            orderId =  entitySaved.orderId,
             quantity =  request.quantity,
             unitPrice = request.unitPrice,
             obsTextModification = request.obsTextModification,
@@ -56,7 +58,7 @@ class OrderItemsService(val repository: IOrderItemsRepository) {
         }
 
         val entity = repository.save(OrderItemsEntity.fromDomain(orderItems))
-        return entity.toDomain();
+        return entity.toDomain()
     }
 
     fun delete(id: Long) : Boolean {

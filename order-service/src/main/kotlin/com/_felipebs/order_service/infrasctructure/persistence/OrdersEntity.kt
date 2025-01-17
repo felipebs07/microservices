@@ -12,25 +12,25 @@ class OrdersEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "orders_id")
-    private var id : UUID?,
+    var id : UUID?,
 
     @Column(name = "kitchen_table_id")
-    private var kitchenTableId : Long,
+    var kitchenTableId : Long,
 
     @Column(name = "payment_id")
-    private var paymentId : UUID?,
+    var paymentId : UUID?,
 
     @Column(name = "total_price")
-    private var totalPrice : BigDecimal,
+    var totalPrice : BigDecimal,
 
     @Column(name = "status")
-    private var status : String,
+    var status : String,
 
     @Column(name = "created_at")
-    private var createdAt : LocalDateTime,
+    var createdAt : LocalDateTime,
 
     @Column(name = "updated_at")
-    private var updatedAt : LocalDateTime?
+    var updatedAt : LocalDateTime?
 
 ) {
     fun toDomain () = Orders (

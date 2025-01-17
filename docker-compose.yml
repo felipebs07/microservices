@@ -7,7 +7,8 @@ services:
     ports:
       - "80:80"
     networks:
-      - company-network  # Adicionar as networks
+      - company-network 
+      - order-network # Adicionar as networks
       - monitoring-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -25,8 +26,8 @@ services:
       - EUREKA_HOSTNAME=${EUREKA_HOSTNAME}
     networks:
       - company-network
+      - order-network
       - monitoring-network
-
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -52,18 +53,31 @@ services:
 
   # INFRASCTRUCTURE - DATABASE
   company-postgres:
+    container_name: company-postgres
     image: postgres:latest
     ports:
       - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - company_postgres_data:/var/lib/postgresql/data
     networks:
       - company-network
     environment:
       - POSTGRES_DB=${COMPANY_POSTGRES_DB}
       - POSTGRES_USER=${COMPANY_POSTGRES_USER}
       - POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
-
+  order-postgres:
+    container_name: order-postgres
+    image: postgres:latest
+    ports:
+      - "5435:5432"
+    volumes:
+      - order_postgres_data:/var/lib/postgresql/data
+    networks:
+      - order-network
+    environment:
+      - POSTGRES_DB=${ORDER_POSTGRES_DB}
+      - POSTGRES_USER=${ORDER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${ORDER_POSTGRES_PASSWORD}
 
   # INFRASCTRUCTURE - MICROSERVICES
   company-service:
@@ -80,9 +94,9 @@ services:
       - COMPANY_POSTGRES_USER=${COMPANY_POSTGRES_USER}
       - COMPANY_POSTGRES_PASSWORD=${COMPANY_POSTGRES_PASSWORD}
 
-      - COMPANY_REDIS_CACHE_PASSWORD=${COMPANY_REDIS_CACHE_PASSWORD}
-      - COMPANY_REDIS_CACHE_PORT=${COMPANY_REDIS_CACHE_PORT}
-      - COMPANY_REDIS_CACHE_URL=${COMPANY_REDIS_CACHE_URL}
+      - REDIS_CACHE_PASSWORD=${REDIS_CACHE_PASSWORD}
+      - REDIS_CACHE_PORT=${REDIS_CACHE_PORT}
+      - REDIS_CACHE_URL=${REDIS_CACHE_URL}
 
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
       - SPRING_LIQUIBASE_ENABLED=true
@@ -95,11 +109,41 @@ services:
       - company-network
     volumes:
       - .env:/app/.env
+  order-service:
+    container_name: order-service-1
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8081:8080"
+    environment:
+      - ORDER_SPRING_DATASOURCE_URL=${ORDER_SPRING_DATASOURCE_URL}
+      - ORDER_POSTGRES_USER=${ORDER_POSTGRES_USER}
+      - ORDER_POSTGRES_PASSWORD=${ORDER_POSTGRES_PASSWORD}
 
+      - REDIS_CACHE_PASSWORD=${REDIS_CACHE_PASSWORD}
+      - REDIS_CACHE_PORT=${REDIS_CACHE_PORT}
+      - REDIS_CACHE_URL=${REDIS_CACHE_URL}
+
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_LIQUIBASE_ENABLED=true
+
+      - EUREKA_URL_DEFAULT=${EUREKA_URL_DEFAULT}
+    depends_on:
+      - order-postgres
+      - discovery-service
+    networks:
+      - order-network
+    volumes:
+      - .env:/app/.env
 
 networks:
   company-network:
+  order-network:
   monitoring-network:
 
 volumes:
-  postgres_data:
+  company_postgres_data:
+  order_postgres_data:

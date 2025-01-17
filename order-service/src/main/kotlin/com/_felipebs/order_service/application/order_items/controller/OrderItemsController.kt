@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.util.*
 
 @RestController
 @RequestMapping("/api/restaurants/orderItems")
@@ -32,7 +31,7 @@ class OrderItemsController(
     }
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: UUID) : ResponseEntity<OrderItemsResponse> {
+    fun findById(@PathVariable id: Long) : ResponseEntity<OrderItemsResponse> {
         return service.findById(id)?.let {
             ResponseEntity.ok(OrderItemsResponse.fromDomain(it))
         } ?: ResponseEntity.notFound().build()
@@ -45,13 +44,13 @@ class OrderItemsController(
     }
 
     @PutMapping("/{id}")
-    fun update(@RequestBody request: OrderItemsRequest, @PathVariable id: UUID) : ResponseEntity<OrderItemsResponse> {
+    fun update(@RequestBody request: OrderItemsRequest, @PathVariable id: Long) : ResponseEntity<OrderItemsResponse> {
         val registry = OrderItemsResponse.fromDomain(service.update(request, id))
         return ResponseEntity.ok().body(registry)
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: UUID) : ResponseEntity<String> {
+    fun delete(@PathVariable id: Long) : ResponseEntity<String> {
         return if (service.delete(id)) ResponseEntity.noContent().build() else ResponseEntity.badRequest().body("Error while trying to delete: $id")
     }
 

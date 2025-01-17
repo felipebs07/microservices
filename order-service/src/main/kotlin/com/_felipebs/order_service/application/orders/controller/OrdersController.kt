@@ -35,12 +35,6 @@ class OrdersController(val service: OrdersService) {
         return ResponseEntity.created(URI("/api/restaurants/orders/${registry.id}")).body(registry)
     }
 
-    @PutMapping("/{id}")
-    fun update(@RequestBody request: OrdersRequest, @PathVariable id: UUID) : ResponseEntity<OrdersResponse> {
-        val registry =  OrdersResponse.fromDomain(service.update(request, id))
-        return ResponseEntity.ok().body(registry)
-    }
-
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: UUID) : ResponseEntity<String> {
         return if (service.delete(id)) ResponseEntity.noContent().build() else ResponseEntity.badRequest().body("Error while trying to delete: $id")

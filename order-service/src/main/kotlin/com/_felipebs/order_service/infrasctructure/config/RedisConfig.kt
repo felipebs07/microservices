@@ -1,4 +1,4 @@
-package com._felipebs.company_service.infrasctructure.database
+package com._felipebs.order_service.infrasctructure.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.cdimascio.dotenv.Dotenv
@@ -24,18 +24,17 @@ class RedisConfig {
 
     fun objectMapper(): ObjectMapper {
         return ObjectMapper()
-            .registerModule(com.fasterxml.jackson.datatype.jsr310.JavaTimeModule()) // Suporte para tipos Java 8
-            .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // Usa ISO-8601
+            .registerModule(com.fasterxml.jackson.datatype.jsr310.JavaTimeModule())
+            .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     }
 
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
-
         return LettuceConnectionFactory(
             RedisStandaloneConfiguration().apply {
-                hostName = dotenv["COMPANY_REDIS_CACHE_URL"]
-                port = (dotenv["COMPANY_REDIS_CACHE_PORT"]).toInt()
-                password = RedisPassword.of(dotenv["COMPANY_REDIS_CACHE_PASSWORD"])
+                hostName = dotenv["REDIS_CACHE_URL"]
+                port = (dotenv["REDIS_CACHE_PORT"]).toInt()
+                password = RedisPassword.of(dotenv["REDIS_CACHE_PASSWORD"])
             })
     }
 
