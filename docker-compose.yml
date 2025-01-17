@@ -99,30 +99,12 @@ services:
     networks:
       - gateway-network
     volumes:
-      - kong_data:/var/lib/postgresql/data
+      - kong_postgres_data:/var/lib/postgresql/data
     healthcheck:
         test: ["CMD", "pg_isready", "-U", "admin", "-d", "kong_db"]
         interval: 5s
         timeout: 5s
         retries: 5
-        
-  ## MIGRATION
-  kong-migration:
-    image: kong:latest
-    command: kong migrations bootstrap
-    environment:
-      - KONG_DATABASE=${KONG_DATABASE}
-      - KONG_PG_HOST=${KONG_PG_HOST}
-      - KONG_PG_USER=${KONG_PG_USER}
-      - KONG_PG_PASSWORD=${KONG_PG_PASSWORD}
-      - KONG_PG_DATABASE=${KONG_PG_DATABASE}
-
-    networks:
-      - gateway-network
-    depends_on:
-      kong-database:
-        condition: service_healthy
-    restart: on-failure  
   company-postgres:
     container_name: company-postgres
     image: postgres:latest
@@ -149,6 +131,24 @@ services:
       - POSTGRES_DB=${ORDER_POSTGRES_DB}
       - POSTGRES_USER=${ORDER_POSTGRES_USER}
       - POSTGRES_PASSWORD=${ORDER_POSTGRES_PASSWORD}
+        
+  ## MIGRATION
+  kong-migration:
+    image: kong:latest
+    command: kong migrations bootstrap
+    environment:
+      - KONG_DATABASE=${KONG_DATABASE}
+      - KONG_PG_HOST=${KONG_PG_HOST}
+      - KONG_PG_USER=${KONG_PG_USER}
+      - KONG_PG_PASSWORD=${KONG_PG_PASSWORD}
+      - KONG_PG_DATABASE=${KONG_PG_DATABASE}
+
+    networks:
+      - gateway-network
+    depends_on:
+      kong-database:
+        condition: service_healthy
+    restart: on-failure  
 
   # INFRASCTRUCTURE - MICROSERVICES
   company-service:
@@ -219,4 +219,4 @@ networks:
 volumes:
   company_postgres_data:
   order_postgres_data:
-  kong_data:
+  kong_postgres_data:
