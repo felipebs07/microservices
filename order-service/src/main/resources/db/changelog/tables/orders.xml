@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="felipebs" id="1620252053">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="orders" schemaName="restaurant"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="orders" schemaName="restaurant">
+            <column name="orders_id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="kitchen_table_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_id" type="UUID"/>
+            <column name="total_price" type="NUMERIC(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

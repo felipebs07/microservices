@@ -3,8 +3,8 @@ package com._felipebs.company_service.application.restaurant.establishments.serv
 
 import com._felipebs.company_service.application.restaurant.establishments.domain.Establishments
 import com._felipebs.company_service.application.restaurant.establishments.dto.EstablishmentsRequest
-import com._felipebs.company_service.infrasctructure.persistence.entity.restaurant.EstablishmentsEntity
-import com._felipebs.company_service.infrasctructure.persistence.repository.restaurant.IEstablishmentsRepository
+import com._felipebs.company_service.infrasctructure.persistence.restaurant.EstablishmentsEntity
+import com._felipebs.company_service.infrasctructure.repository.restaurant.IEstablishmentsRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

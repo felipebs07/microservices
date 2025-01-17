@@ -1,4 +1,4 @@
-package com._felipebs.company_service.infrasctructure.monitor
+package com._felipebs.order_service.infrasctructure.monitor
 
 
 import io.micrometer.core.instrument.Counter
