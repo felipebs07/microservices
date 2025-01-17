@@ -87,7 +87,6 @@ services:
       - monitoring-network  
 
   # INFRASCTRUCTURE - DATABASE
-    ## DATABASE
   kong-database:
     image: postgres:latest
     container_name: kong-database
