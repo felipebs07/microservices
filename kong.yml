@@ -1,21 +1,14 @@
 _format_version: "3.0"
 services:
   - name: company-service
-    url: http://company-service-1:8080
+    url: http://company-service:8080
     routes:
-      - name: company-route
-        paths:
-          - /company
+      - name: company-service-main-router
+        paths: ["/company"]
         strip_path: true
-        protocols:
-          - http
-
   - name: order-service
-    url: http://order-service-1:8080
+    url: http://order-service:8081
     routes:
-      - name: order-route
-        paths:
-          - /order
+      - name: order-service-main-router
+        paths: ["/order"]
         strip_path: true
-        protocols:
-          - http

@@ -47,6 +47,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
   # INFRASCTRUCTURE - MONITORING
   discovery-service:
@@ -150,7 +152,7 @@ services:
         condition: service_healthy
     restart: on-failure  
 
-  # INFRASCTRUCTURE - MICROSERVICES
+  ## INFRASCTRUCTURE - MICROSERVICES
   company-service:
     container_name: company-service-1
     build:
@@ -209,7 +211,19 @@ services:
       - order-network
     volumes:
       - .env:/app/.env
-
+  
+  ## CONFIG/SETUP
+  kong-config:
+    image: kong/deck
+    container_name: kong-config
+    depends_on:
+      kong:
+        condition: service_healthy
+    networks:
+      - gateway-network
+    volumes:
+      - ./kong.yml:/kong.yml
+    command: sync -s /kong.yml --kong-addr http://kong:8001
 networks:
   company-network:
   order-network:
